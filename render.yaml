@@ -1,0 +1,16 @@
+# render.yaml  — place this in your repository root
+# Deploys the C++ materials search backend as a Render Web Service
+
+services:
+  - type: web
+    name: vecta-backend
+    runtime: native            # bare-metal Linux build (no Docker needed)
+    buildCommand: make          # runs: g++ -std=c++17 -O2 -o server server.cpp search.cpp similarity.cpp trie.cpp
+    startCommand: ./server
+    envVars:
+      - key: PORT
+        generateValue: false    # Render injects $PORT automatically; server.cpp reads it via getenv("PORT")
+    # If materials.json is large, commit it to the repo or fetch it in a build step:
+    # buildCommand: |
+    #   wget -q "https://your-cdn.com/materials.json" -O materials.json
+    #   make

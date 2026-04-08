@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 9000 4000">
+  <defs>
+    <clipPath id="clippath">
+      <path d="M0,625.901v490.802l913.294-531.258,1156.967,152.473,452.542,234.602,271.004-493.889,1368.816,11.333,117.819,180.458,174.283-233.128,432.969-150.185,914.872,421.071,214.931,298.672s120.912-67.708,302.201-168.652c194.903-108.521,459.587-255.447,718.824-397.942l503.225-112.945,1131.455,138.083,326.8,459.067V0H0v625.901Z" style="clip-rule: evenodd; fill: none;"/>
+    </clipPath>
+    <linearGradient id="linear-gradient" x1="-773.563" y1="-1180.912" x2="9635.242" y2="2251.996" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#1fa2ff"/>
+      <stop offset=".5" stop-color="#12d8fa"/>
+      <stop offset="1" stop-color="#a6ffcb"/>
+    </linearGradient>
+    <linearGradient id="linear-gradient-2" x1="-809.423" y1="2002.829" x2="-771.661" y2="839.075" gradientTransform="translate(1238.882 -354.715)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#fff"/>
+      <stop offset="1" stop-color="#000"/>
+    </linearGradient>
+    <mask id="mask" x="0" y="503.762" width="913.294" height="612.941" maskUnits="userSpaceOnUse">
+      <rect x="0" y="503.763" width="913.294" height="612.94" style="fill: url(#linear-gradient-2);"/>
+    </mask>
+    <linearGradient id="linear-gradient-3" x1="-134.028" y1="1522.625" x2="-51.638" y2="640.368" gradientTransform="translate(1251.709 -371.266)" xlink:href="#linear-gradient-2"/>
+    <mask id="mask-1" x="293.552" y="189.345" width="1776.709" height="548.574" maskUnits="userSpaceOnUse">
+      <rect x="293.552" y="189.345" width="1776.706" height="548.573" style="fill: url(#linear-gradient-3);"/>
+    </mask>
+    <linearGradient id="linear-gradient-4" x1="-542.639" y1="1299.071" x2="-508.31" y2="379.053" gradientTransform="translate(1238.882 -376.161)" xlink:href="#linear-gradient-2"/>
+    <mask id="mask-2" x="0" y="-.002" width="1438.005" height="625.903" maskUnits="userSpaceOnUse">
+      <rect x="0" y="-.002" width="1438.005" height="625.903" style="fill: url(#linear-gradient-4);"/>
+    </mask>
+    <linearGradient id="linear-gradient-5" x1="990.169" y1="1564.893" x2="553.046" y2="252.379" gradientTransform="translate(1283.106 -361.015)" xlink:href="#linear-gradient-2"/>
+    <mask id="mask-3" x="1012.116" y="-.003" width="2044.324" height="972.524" maskUnits="userSpaceOnUse">
+      <rect x="1012.116" y="-.003" width="2044.324" height="972.524" style="fill: url(#linear-gradient-5);"/>
+    </mask>
+    <linearGradient id="linear-gradient-6" x1="2409.65" y1="1208.359" x2="2090.389" y2="631.63" gradientTransform="translate(1360.957 -382.101)" xlink:href="#linear-gradient-2"/>
+    <mask id="mask-4" x="2793.806" y="106.171" width="1368.819" height="383.794" maskUnits="userSpaceOnUse">
+      <rect x="2793.806" y="106.171" width="1368.819" height="383.794" style="fill: url(#linear-gradient-6);"/>
+    </mask>
+    <linearGradient id="linear-gradient-7" x1="2796.314" y1="1385.363" x2="1817.706" y2="139.218" gradientTransform="translate(1362.038 -384.567)" xlink:href="#linear-gradient-2"/>
+    <mask id="mask-5" x="2818.561" y="0" width="1448.16" height="433.512" maskUnits="userSpaceOnUse">
+      <rect x="2818.561" width="1448.158" height="433.512" style="fill: url(#linear-gradient-7);"/>
+    </mask>
+    <linearGradient id="linear-gradient-8" x1="2838.637" y1="1275.084" x2="2989.685" y2="406.788" gradientTransform="translate(1409.819 -374.216)" xlink:href="#linear-gradient-2"/>
+    <mask id="mask-6" x="3912.063" y="-.003" width="869.589" height="670.426" maskUnits="userSpaceOnUse">
+      <rect x="3912.063" y="-.003" width="869.589" height="670.426" style="fill: url(#linear-gradient-8);"/>
+    </mask>
+    <linearGradient id="linear-gradient-9" x1="4789.466" y1="629.383" x2="3296.151" y2="594.825" gradientTransform="translate(1433.53 -384.402)" xlink:href="#linear-gradient-2"/>
+    <mask id="mask-7" x="4454.724" y="0" width="1260.675" height="437.295" maskUnits="userSpaceOnUse">
+      <rect x="4454.724" y="0" width="1260.675" height="437.295" style="fill: url(#linear-gradient-9);"/>
+    </mask>
+    <linearGradient id="linear-gradient-10" x1="3787.761" y1="1164.465" x2="3983.437" y2="457.286" gradientTransform="translate(1452.449 -372.566)" xlink:href="#linear-gradient-2"/>
+    <mask id="mask-8" x="4887.693" y="117.265" width="914.872" height="590.915" maskUnits="userSpaceOnUse">
+      <rect x="4887.693" y="117.265" width="914.87" height="590.915" style="fill: url(#linear-gradient-10);"/>
+    </mask>
+    <linearGradient id="linear-gradient-11" x1="4637.326" y1="1536.073" x2="4067.464" y2="-324.562" gradientTransform="translate(1473.844 -359.515)" xlink:href="#linear-gradient-2"/>
+    <mask id="mask-9" x="5377.343" y="-.002" width="1055.329" height="1006.855" maskUnits="userSpaceOnUse">
+      <rect x="5377.343" y="-.002" width="1055.329" height="1006.855" style="fill: url(#linear-gradient-11);"/>
+    </mask>
+    <linearGradient id="linear-gradient-12" x1="5478.007" y1="1861.911" x2="5615.323" y2="327.402" gradientTransform="translate(1515.02 -366.884)" xlink:href="#linear-gradient-2"/>
+    <mask id="mask-10" x="6319.697" y="0" width="1539.219" height="838.201" maskUnits="userSpaceOnUse">
+      <rect x="6319.697" width="1539.219" height="838.201" style="fill: url(#linear-gradient-12);"/>
+    </mask>
+    <linearGradient id="linear-gradient-13" x1="5167.607" y1="1276.964" x2="6739.879" y2="466.797" gradientTransform="translate(1546.428 -384.272)" xlink:href="#linear-gradient-2"/>
+    <mask id="mask-11" x="7038.521" y="0" width="1961.482" height="440.259" maskUnits="userSpaceOnUse">
+      <rect x="7038.521" width="1961.482" height="440.259" style="fill: url(#linear-gradient-13);"/>
+    </mask>
+    <linearGradient id="linear-gradient-14" x1="6662.328" y1="1060.581" x2="6473.518" y2="476.987" gradientTransform="translate(1568.417 -383.174)" xlink:href="#linear-gradient-2"/>
+    <mask id="mask-12" x="7541.746" y="127.365" width="1131.455" height="338.031" maskUnits="userSpaceOnUse">
+      <rect x="7541.746" y="127.365" width="1131.452" height="338.031" style="fill: url(#linear-gradient-14);"/>
+    </mask>
+    <linearGradient id="linear-gradient-15" x1="6596.132" y1="1716.561" x2="7447.492" y2="236.979" gradientTransform="translate(1607.341 -363.115)" xlink:href="#linear-gradient-2"/>
+    <mask id="mask-13" x="8432.567" y="-.002" width="567.433" height="924.465" maskUnits="userSpaceOnUse">
+      <rect x="8432.567" y="-.002" width="567.433" height="924.465" style="fill: url(#linear-gradient-15);"/>
+    </mask>
+  </defs>
+  <!-- Generator: Adobe Illustrator 28.7.7, SVG Export Plug-In . SVG Version: 1.2.0 Build 194)  -->
+  <g>
+    <g id="Layer_1">
+      <g>
+        <rect x="0" width="9000" height="4000" style="fill: #fafafa;"/>
+        <g style="clip-path: url(#clippath);">
+          <rect x="0" width="9000" height="1116.703" style="fill: url(#linear-gradient);"/>
+        </g>
+        <g style="mask: url(#mask);">
+          <path d="M913.294,585.445l-619.742-81.683C165.622,558.659,59.883,602.962,0,625.901v490.802l913.294-531.258Z" style="fill: #fff; fill-rule: evenodd;"/>
+        </g>
+        <g style="mask: url(#mask-1);">
+          <path d="M293.552,503.762l619.742,81.683,1156.967,152.473L1012.116,189.345c-227.592,100.744-504.22,222.448-718.564,314.418" style="fill: #fff; fill-rule: evenodd;"/>
+        </g>
+        <g style="mask: url(#mask-2);">
+          <path d="M293.552,503.762c214.344-91.969,490.972-213.673,718.564-314.418C1252.383,82.991,1438.005,0,1438.005,0H0v625.901c59.88-22.939,165.622-67.242,293.552-122.139" style="fill: #fff; fill-rule: evenodd;"/>
+        </g>
+        <g style="mask: url(#mask-3);">
+          <path d="M1012.116,189.345l1058.145,548.574,452.542,234.602,271.004-493.889,24.755-45.12L3056.439,0h-1618.434s-185.622,82.991-425.89,189.345" style="fill: #fff;"/>
+        </g>
+        <g style="mask: url(#mask-4);">
+          <polygon points="3912.063 106.171 2818.561 433.512 2793.806 478.632 4162.622 489.965 3912.063 106.171" style="fill: #fff; fill-rule: evenodd;"/>
+        </g>
+        <g style="mask: url(#mask-5);">
+          <polygon points="2818.561 433.512 3912.063 106.171 4266.721 0 3056.439 0 2818.561 433.512" style="fill: #fff; fill-rule: evenodd;"/>
+        </g>
+        <g style="mask: url(#mask-6);">
+          <polygon points="3912.063 106.171 4162.622 489.965 4280.441 670.423 4454.724 437.294 4781.649 0 4266.721 0 3912.063 106.171" style="fill: #fff; fill-rule: evenodd;"/>
+        </g>
+        <g style="mask: url(#mask-7);">
+          <polygon points="4781.649 0 4454.724 437.294 4887.693 287.11 5377.343 117.266 5715.398 0 4781.649 0" style="fill: #fff;"/>
+        </g>
+        <g style="mask: url(#mask-8);">
+          <polygon points="5377.343 117.266 4887.693 287.11 5802.565 708.18 5377.343 117.266" style="fill: #fff; fill-rule: evenodd;"/>
+        </g>
+        <g style="mask: url(#mask-9);">
+          <path d="M5377.343,117.266l425.222,590.915,214.931,298.672s120.912-67.708,302.201-168.652L6432.672,0h-717.273l-338.055,117.266Z" style="fill: #fff; fill-rule: evenodd;"/>
+        </g>
+        <g style="mask: url(#mask-10);">
+          <path d="M6432.672,0l-112.975,838.201c194.903-108.521,459.587-255.447,718.824-397.942C7377.202,254.09,7706.586,75.491,7858.916,0h-1426.244Z" style="fill: #fff;"/>
+        </g>
+        <g style="mask: url(#mask-11);">
+          <path d="M7858.916,0c-152.33,75.491-481.713,254.09-820.395,440.259l503.225-112.945,890.821-199.948L9000,0h-1141.084Z" style="fill: #fff; fill-rule: evenodd;"/>
+        </g>
+        <g style="mask: url(#mask-12);">
+          <polygon points="8432.567 127.365 7541.746 327.313 8673.2 465.396 8432.567 127.365" style="fill: #fff; fill-rule: evenodd;"/>
+        </g>
+        <g style="mask: url(#mask-13);">
+          <polygon points="8432.567 127.365 8673.2 465.396 9000 924.463 9000 0 8432.567 127.365" style="fill: #fff; fill-rule: evenodd;"/>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

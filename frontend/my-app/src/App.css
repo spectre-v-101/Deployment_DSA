@@ -1,0 +1,312 @@
+body{
+  margin:0;
+  font-family: Arial, Helvetica, sans-serif;
+   
+  /*background: transparent;*/
+  /*background-image: url("/background.svg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  animation: moveBG 20s linear infinite;*/
+}
+@keyframes moveBG {
+  0% {
+    background-position-x: 0px;
+  }
+  100% {
+    background-position-x: -230px;
+  }
+}
+
+/*.container{
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}*/
+.container{
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:flex-start;
+  padding-top:-50px;
+  backdrop-filter:blur(4px); ;
+}
+.logo {
+  display: block;
+  margin: 0 auto 20px auto;
+  padding-top: 160px;
+  padding-bottom: 10px;
+  width: 300px;
+  position: relative;
+  filter: drop-shadow(0 0px 0px rgba(125, 138, 255, 0.67)); /* needed for pseudo-element positioning */
+}
+
+/* Bottom-only shadow */
+.logo::after {
+
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -6px;       /* move it slightly below the logo */
+  width: 100%;
+  height: 0;           /* no height needed, shadow only */
+  box-shadow: 0 6px 10px rgba(125, 138, 255, 0.67);
+  pointer-events: none;
+  z-index: -1;
+}
+/*.logo{
+  display:block;
+  margin:0 auto 20px auto;
+  padding-top: 160px;
+  padding-bottom: 10px;
+  width:300px;
+  box-shadow: 0 6px 10px -4px rgba(125, 138, 255, 0.67);
+}*/
+.searchWrapper{
+  width:620px;
+  position:relative;
+  z-index:2;
+}
+
+.title{
+  text-align:center;
+  margin-bottom:20px;
+  font-size:32px;
+  color:black;
+}
+
+/* Search box container */
+
+.searchBox{
+  display:flex;
+  border:2px solid #d1d5db;
+  border-radius:10px;
+  overflow:hidden;
+  background:rgb(255, 255, 255);
+  box-shadow:0 4px 12px rgba(196, 34, 207, 0.638);
+}
+.modeToggle {
+         /* place it above the search bar */
+  
+  
+  
+  font-size: 22px;
+       /* optional, makes hover background circular */
+}
+.modeToggle:hover {
+  
+  filter: brightness(0.8);   /* make icon brighter */
+}
+
+/* Input */
+
+.searchBar{
+  flex:1;
+  padding:14px;
+  font-size:16px;
+  border:none;
+  outline:none;
+  background-color: #fff7d5;
+}
+
+/* Focus glow */
+
+.searchBox:focus-within{
+  border-color:#4f46e5;
+  box-shadow:0 0 0 3px rgba(79,70,229,0.15);
+}
+
+/* Button */
+
+.searchBtn{
+  padding:14px 20px;
+  border:none;
+  background:#4f46e5;
+  color:white;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.searchBtn:hover{
+  background:#4338ca;
+}
+
+/* Suggestions */
+
+/*.suggestions{
+  position:absolute;
+  top:110px;
+  width:100%;
+  background:white;
+  border-radius:10px;
+  border:1px solid #e5e7eb;
+  box-shadow:0px 10px 25px rgba(0,0,0,0.12);
+  overflow:hidden;
+}*/
+.suggestions{
+  position:absolute;
+  top:100%;
+  left:0;
+  width:100%;
+  margin-top:8px;
+  background:white;
+  border-radius:10px;
+  border:1px solid #e5e7eb;
+  box-shadow:0px 10px 25px rgba(0,0,0,0.12);
+  overflow:hidden;
+  border-bottom: #4f46e5 solid 2px;
+  border-top: #4f46e5 solid 2px;
+  border-right:#4f46e5 solid 2px;
+  border-left:#4f46e5 solid 2px
+  
+}
+
+/* Each suggestion */
+
+.suggestion{
+  padding:12px 16px;
+  cursor:pointer;
+  border-bottom:1px solid #f1f5f9;
+}
+
+.suggestion:last-child{
+  border-bottom:none;
+}
+
+.suggestion:hover{
+  background:#d3d4d6;
+}
+
+.suggestion.active{
+  background:#e5e7eb;
+}
+.ghostText{
+  position:absolute;
+  left:63px;
+  top:341px;
+  transform:translateY(-50%);
+  white-space:pre;
+  pointer-events:none;
+  font-size:16px;
+}
+
+.prefixPart{
+  visibility:hidden;
+}
+
+.ghostPart{
+  color:rgb(156, 155, 182);
+}
+.clear-btn {
+  position: relative;
+  background-color: rgb(212, 212, 212);
+  
+  color: rgb(0, 0, 0);
+  border: none;
+  font-size: 24px;
+  width: 40px;
+  cursor: pointer;
+  
+}
+.clear-btn:hover {
+  background-color: rgba(233, 3, 3, 0.816);
+  color:#ffffff
+}
+.mic {
+  position: relative;
+  right: 0;
+  
+  width: 40px;
+  background-color:#e3e6eb67;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+}
+.mic:hover {
+  color: #4f46e5;
+  background-color: #e3e6eb ;
+}
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+.mic.active {
+  color: #05df2d;
+  background-color: #e3e6eb ;
+  animation: pulse 1s infinite;
+}
+
+.suggestion-row {
+  display: grid;
+  grid-template-columns: 100px 80px 220px 200px; /* adjust widths */
+  padding: 10px 8px;
+  align-items: center;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.suggestion-row.active {
+  background-color: #4f46e5;
+  color: white;
+}
+
+.cell {
+  padding: 0 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-family: monospace;
+  border-right: 3px solid #ccc;
+  align-content: center; /* optional for Excel feel */
+}
+/* remove the last cell's border */
+.cell:last-child {
+  border-right: none;
+}
+
+.cell.density,
+.cell.band-gap {
+  text-align: right; /* numbers align right */
+}
+.suggestion-row.header {
+  font-weight: bold;
+  background-color: #29ffd4;
+  border-bottom: 2px solid #4f46e5;
+  align-items: center;
+}
+.cell-formula {
+  border-right:3px solid #ccc;
+  text-align: left;
+}
+.cell-crystal {
+  border-right:3px solid #ccc;
+  text-align: center;
+}
+.cell-density {
+  border-right:3px solid #ccc;
+  text-align: center;
+}
+.cell-band-gap {
+  text-align: right;
+}
+.cell-formulah {
+  border-right:3px solid #000000;
+  text-align: center;
+}
+.cell-crystalh {
+  border-right:3px solid #000000;
+  text-align: center;
+}
+.cell-densityh {
+  border-right:3px solid #000000;
+  text-align: center;
+}
+.cell-band-gaph {
+  text-align: center;
+}
+.formula {
+  font-family: 'IBM Plex Mono', monospace;
+}
