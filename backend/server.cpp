@@ -262,8 +262,7 @@ static void send_options(int client_fd) {
 //  main
 // ─────────────────────────────────────────────────────────────────────────────
 int main() {
-    //loadFromJSON("backend/materials.json");
-   // initSearchEngine();
+    
 
     // ── Read PORT from environment (Render sets $PORT automatically) ──────────
     int port = 8080;
@@ -290,6 +289,8 @@ int main() {
         { perror("listen"); return 1; }
 
     cout << "Server running on port " << port << "\n";
+    loadFromJSON("backend/materials.json");
+    initSearchEngine();
 
     // ── Accept loop ───────────────────────────────────────────────────────────
     while (true) {
