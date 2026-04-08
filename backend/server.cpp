@@ -262,7 +262,7 @@ static void send_options(int client_fd) {
 //  main
 // ─────────────────────────────────────────────────────────────────────────────
 int main() {
-    loadFromJSON("materials.json");
+    loadFromJSON("backend/materials.json");
     initSearchEngine();
 
     // ── Read PORT from environment (Render sets $PORT automatically) ──────────
