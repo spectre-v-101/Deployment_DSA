@@ -404,7 +404,7 @@ const handleSearch = (text = query) => {
   const handleSuggestionClick = (text) => { setQuery(text); handleSearch(text); };
 
   return (
-    <Router>
+   /* <Router>*/
       <Routes>
         <Route path="/" element={
           <MainUI
@@ -419,7 +419,7 @@ const handleSearch = (text = query) => {
         }/>
         <Route path="/results" element={<Results />} />
       </Routes>
-    </Router>
+    /*</Router>*/
   );
 }
 
