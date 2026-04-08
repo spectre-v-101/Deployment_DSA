@@ -1,6 +1,6 @@
 #include <iostream>
 #include <cstring>
-#include <conio.h>
+
 using namespace std;
 
 string heap_words[20];
