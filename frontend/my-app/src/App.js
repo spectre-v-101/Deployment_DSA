@@ -3,6 +3,7 @@ import { FaSun, FaMoon, FaMicrophone } from "react-icons/fa";
 import { useRef, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Results from "./results";
+ import { useNavigate } from "react-router-dom";
 
 // ─── Backend URL ──────────────────────────────────────────────────────────────
 // In development:  set REACT_APP_API_URL=http://localhost:8080 in .env.local
@@ -368,12 +369,15 @@ function App() {
       console.error("Server not reachable");
     }
   };
+ 
 
-  const handleSearch = (text = query) => {
-    if (!text.trim()) return;
-    // Navigate within the same SPA (works for both localhost and production)
-    window.location.href = `/results?q=${encodeURIComponent(text)}`;
-  };
+const navigate = useNavigate();
+
+const handleSearch = (text = query) => {
+  if (!text.trim()) return;
+  navigate(`/results?q=${encodeURIComponent(text)}`);
+};
+  
 
   const handleKeyDown = (e) => {
     if (e.key === "Escape") { setSelectedIndex(-1); setSuggestions([]); }
