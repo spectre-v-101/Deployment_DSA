@@ -109,7 +109,7 @@ void loadFromJSON_search(const string& filename) {
 // 🔥 Init
 void initSearchEngine() {
     if (!isLoaded) {
-        loadFromJSON_search("backend/materials.json");
+        loadFromJSON_search("materials.json");
         isLoaded = true;
     }
 }
