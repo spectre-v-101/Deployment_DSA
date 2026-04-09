@@ -198,7 +198,7 @@ function MainUI({
                 pointerEvents:"none", zIndex:1,
                 color: darkMode ? "rgba(255,255,255,0.15)" : "rgba(0,0,0,0.15)",
               }}>
-                <span style={{ visibility:"hidden" }}>{query}</span>
+                <span style={{ visibility:"visible" }}>{query}</span>
                 <span>{ghostSuggestion}</span>
               </div>
             )}
