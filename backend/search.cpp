@@ -118,6 +118,193 @@ void initSearchEngine() {
 string generate_explanation(const Result &r, float w_struct, float w_energy, float w_elec, float w_comp) {
     string exp = "";
 
+    // ─────────────────────────────────────────────────────────────────
+    // 1. COMPOSITION
+    // ─────────────────────────────────────────────────────────────────
+    // S_comp = cosine * jaccard, so it captures both stoichiometric
+    // ratio similarity AND element-set overlap simultaneously.
+    // A high score requires BOTH conditions to be true.
+    exp += "[Composition]\\n";
+    if (r.S_comp > 0.85)
+        exp += "  High compositional similarity: materials share the same "
+               "or nearly identical elements in similar proportions. "
+               "Strong candidate for isoelectronic or isovalent substitution.\\n";
+    else if (r.S_comp > 0.6)
+        exp += "  Moderate compositional similarity: partial element overlap "
+               "with differing stoichiometry or one/two substituted elements. "
+               "May belong to the same material family with modified properties.\\n";
+    else if (r.S_comp > 0.3)
+        exp += "  Low compositional similarity: few shared elements or "
+               "significantly different ratios. Chemistry likely diverges; "
+               "similar properties, if any, arise from other factors.\\n";
+    else
+        exp += "  Negligible compositional similarity: largely different "
+               "elements. Any overall similarity is structurally or "
+               "energetically driven, not chemical.\\n";
+
+    // ─────────────────────────────────────────────────────────────────
+    // 2. STRUCTURE
+    // ─────────────────────────────────────────────────────────────────
+    // NOTE: density_sim and volume_sim via raw sim_diff are only
+    // meaningful if values are pre-normalized. Flag when crystal_sim
+    // dominates (which it almost always will given the unit issue).
+    exp += "[Structure]\n";
+    if (r.S_struct > 0.85)
+        exp += "  High structural similarity: same or closely related crystal "
+               "system with compatible packing and unit cell dimensions. "
+               "Likely to exhibit similar mechanical and transport properties.\\n";
+    else if (r.S_struct > 0.6) {
+        exp += "  Moderate structural similarity: compatible symmetry class "
+               "(e.g. cubic-tetragonal or hexagonal-trigonal relationship) "
+               "but density or volume differ. Structures may be distorted "
+               "variants of each other.\\n";
+    }
+    else if (r.S_struct > 0.3)
+        exp += "  Low structural similarity: different crystal systems and/or "
+               "incompatible packing. Shared properties unlikely to stem "
+               "from structural resemblance.\\n";
+    else
+        exp += "  Negligible structural similarity: fundamentally different "
+               "crystal symmetry and packing. No structural basis for "
+               "analogous behaviour.\\n";
+
+    // ─────────────────────────────────────────────────────────────────
+    // 3. ENERGETICS
+    // ─────────────────────────────────────────────────────────────────
+    // hull_sim (weight 0.65) dominates over formation_sim (0.35).
+    // energy_above_hull is the physically critical stability descriptor;
+    // formation_energy alone conflates stability with bonding strength.
+    exp += "[Thermodynamic Stability]\\n";
+    if (r.S_energy > 0.85)
+        exp += "  High energetic similarity: comparable distance from the "
+               "convex hull and similar formation energy. Both materials "
+               "likely occupy the same stability regime "
+               "(stable / metastable / unstable).\\n";
+    else if (r.S_energy > 0.6)
+        exp += "  Moderate energetic similarity: broadly similar stability "
+               "landscape but formation energies diverge. One material may "
+               "be more exothermically bonded while maintaining comparable "
+               "hull proximity.\\n";
+    else if (r.S_energy > 0.3)
+        exp += "  Low energetic similarity: different thermodynamic stability "
+               "regimes. One is likely significantly closer to or on the "
+               "hull; synthesis/stability conditions will differ.\\n";
+    else
+        exp += "  Negligible energetic similarity: materials sit in "
+               "fundamentally different regions of thermodynamic stability. "
+               "Distinct synthesis windows and degradation behaviour expected.\\n";
+
+    // ─────────────────────────────────────────────────────────────────
+    // 4. ELECTRONIC
+    // ─────────────────────────────────────────────────────────────────
+    // Warn explicitly when is_metal differs — a non-zero band_gap sim
+    // between a metal and insulator is physically misleading.
+    exp += "[Electronic Character]\\n";
+
+    bool metal_mismatch = (r.S_elec < 0.15); // proxy: metal_sim=0 pulls score down hard
+    if (metal_mismatch) {
+        exp += "  WARNING: one material is metallic and the other is "
+               "insulating/semiconducting. Band gap comparison is not "
+               "meaningful across this boundary. Electronic similarity "
+               "score should be treated with caution.\\n";
+    } else if (r.S_elec > 0.85)
+        exp += "  High electronic similarity: closely matched band gap and "
+               "same metallic classification. Likely comparable optical "
+               "absorption edge, carrier effective mass regime, and "
+               "conductivity type.\\n";
+    else if (r.S_elec > 0.6)
+        exp += "  Moderate electronic similarity: same metallic class but "
+               "band gap values differ. May share broad optical/electronic "
+               "behaviour but quantitative properties (e.g. absorption "
+               "onset, doping response) will differ.\\n";
+    else if (r.S_elec > 0.3)
+        exp += "  Low electronic similarity: band gap differs substantially. "
+               "Electronic and optical applications are unlikely to be "
+               "interchangeable.\\n";
+    else
+        exp += "  Negligible electronic similarity: different band gap range "
+               "and/or conflicting metallic character.\\n";
+
+    // ─────────────────────────────────────────────────────────────────
+    // 5. DOMINANT FACTOR — with score-aware nuance
+    // ─────────────────────────────────────────────────────────────────
+    // Raw contribution = weight × score.
+    // Distinguish: high-weight + high-score (genuine driver)
+    //          vs  high-weight + low-score  (weight artefact, not a match signal)
+    float c_comp   = w_comp   * r.S_comp;
+    float c_struct = w_struct * r.S_struct;
+    float c_energy = w_energy * r.S_energy;
+    float c_elec   = w_elec   * r.S_elec;
+
+    float max_c = max({c_comp, c_struct, c_energy, c_elec});
+
+    // Identify which score and label belong to the dominant contributor
+    float  dom_score;
+    string dom_name, dom_detail;
+
+    if (max_c == c_comp) {
+        dom_score  = r.S_comp;
+        dom_name   = "compositional";
+        dom_detail = "shared elemental chemistry";
+    } else if (max_c == c_struct) {
+        dom_score  = r.S_struct;
+        dom_name   = "structural";
+        dom_detail = "crystal symmetry and packing";
+    } else if (max_c == c_energy) {
+        dom_score  = r.S_energy;
+        dom_name   = "thermodynamic";
+        dom_detail = "hull proximity and formation energy";
+    } else {
+        dom_score  = r.S_elec;
+        dom_name   = "electronic";
+        dom_detail = "band gap and metallic character";
+    }
+
+    exp += "[Overall Driver]\\n";
+
+    if (dom_score > 0.6) {
+        // Genuinely high similarity in the dominant dimension
+        exp += "  Overall similarity is genuinely driven by " + dom_name +
+               " affinity (" + dom_detail + "). "
+               "The high weight and high score together indicate a "
+               "physically meaningful match in this dimension.\\n";
+    } else {
+        // Weight is large but the actual score is mediocre/low —
+        // the dimension dominates the sum arithmetically, not physically
+        exp += "  The largest weighted contribution comes from " + dom_name +
+               " (high weight), but the raw score is only moderate/low. "
+               "This is a weighting artefact: no single dimension shows "
+               "strong similarity. Interpret the overall score conservatively.\\n";
+    }
+
+    // ─────────────────────────────────────────────────────────────────
+    // 6. CROSS-CONSISTENCY SANITY CHECK
+    // ─────────────────────────────────────────────────────────────────
+    // High structural + low compositional is physically suspicious
+    // (different atoms, same crystal = possible but worth flagging).
+    if (r.S_struct > 0.75 && r.S_comp < 0.3)
+        exp += "[Note] Structural similarity is high despite very different "
+               "compositions. This may indicate isostructural compounds "
+               "(e.g. same prototype, different chemistry) — verify manually.\\n";
+
+    // High compositional + low structural: polymorphs or amorphous phases
+    if (r.S_comp > 0.75 && r.S_struct < 0.3)
+        exp += "[Note] Compositional similarity is high but structure differs "
+               "substantially. Possible polymorphs or different phases of "
+               "the same composition — thermodynamic context is critical.\\n";
+
+    // High energy similarity + very different composition/structure:
+    // coincidental stability, not related materials
+    if (r.S_energy > 0.75 && r.S_comp < 0.3 && r.S_struct < 0.3)
+        exp += "[Note] Similar thermodynamic stability despite different "
+               "composition and structure. Coincidental hull proximity — "
+               "not indicative of chemical or structural relationship.\\n";
+
+    return exp;
+}
+string generate_explanation_old(const Result &r, float w_struct, float w_energy, float w_elec, float w_comp) {
+    string exp = "";
+
     // Composition
     if (r.S_comp > 0.85)
         exp += "-> Very similar elemental composition; likely comparable chemistry.\\n";

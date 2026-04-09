@@ -11,7 +11,38 @@ double clamp(double x) {
 double sim_diff(double a, double b) {
     return clamp(1.0 - fabs(a - b));
 }
+// ─────────────────────────────────────────────────────────────────────────
+// Density: ratio-based — 2x denser is 2x denser regardless of absolute value.
+// A log-ratio kernel is the physically correct measure.
+// max_ratio controls the "tolerance": at what ratio do we call it 0 similarity?
+// A value of 10.0 means density differing by 10x or more → score = 0.
+// ─────────────────────────────────────────────────────────────────────────
+double density_sim(double rho1, double rho2, double max_ratio = 10.0) {
+    if (rho1 <= 0 || rho2 <= 0) return 0.0;
+    double log_ratio = fabs(log(rho1 / rho2));              // symmetric, unit-free
+    double log_max   = log(max_ratio);
+    return clamp(1.0 - (log_ratio / log_max));
+}
 
+// ─────────────────────────────────────────────────────────────────────────
+// Band gap: absolute difference matters BUT the metal/semiconductor boundary
+// is categorical — crossing it should hard-penalize regardless of gap values.
+// sigma controls the decay width in eV (1.5 eV default: gaps within ~1.5 eV
+// of each other score ~0.5; gaps within 0.3 eV score ~0.98).
+// ─────────────────────────────────────────────────────────────────────────
+double bandgap_sim(double bg1, double bg2,
+                   bool is_metal1, bool is_metal2,
+                   double sigma = 1.5) {
+    if (is_metal1 != is_metal2)
+        return 0.0;             // categorically different — no meaningful comparison
+
+    if (is_metal1 && is_metal2)
+        return 1.0;             // both metals: band gap = 0 for both by definition
+
+    // Both are semiconductors/insulators: Gaussian decay on absolute eV difference
+    double diff = fabs(bg1 - bg2);
+    return exp(-(diff * diff) / (2.0 * sigma * sigma));
+}
 double crystal_similarity(string a, string b) {
     if (a == b) return 1.0;
 
@@ -28,10 +59,10 @@ double crystal_similarity(string a, string b) {
 
 double structural_similarity(Material1 &m1, Material1 &m2) {
     double crystal_sim = crystal_similarity(m1.crystal_system, m2.crystal_system);
-    double density_sim = sim_diff(m1.density, m2.density);
-    double volume_sim  = sim_diff(m1.volume, m2.volume);
+    double density_s = density_sim(m1.density, m2.density);
+    double volume_sim  = sim_diff(m1.volume/ m2.volume,1.0);
 
-    return clamp(0.6 * crystal_sim + 0.3 * density_sim + 0.1 * volume_sim);
+    return clamp(0.6 * crystal_sim + 0.3 * density_s + 0.1 * volume_sim);
 }
 
 double energetic_similarity(Material1 &m1, Material1 &m2) {
@@ -42,10 +73,10 @@ double energetic_similarity(Material1 &m1, Material1 &m2) {
 }
 
 double electronic_similarity(Material1 &m1, Material1 &m2) {
-    double bandgap_sim = sim_diff(m1.band_gap, m2.band_gap);
+    double bandgap_s = bandgap_sim(m1.band_gap, m2.band_gap, m1.is_metal, m2.is_metal);
     double metal_sim   = (m1.is_metal == m2.is_metal) ? 1.0 : 0.0;
 
-    return clamp(0.85 * bandgap_sim + 0.15 * metal_sim);
+    return clamp(0.85 * bandgap_s + 0.15 * metal_sim);
 }
 
 double compositional_similarity_old(Material1 &m1, Material1 &m2) {
