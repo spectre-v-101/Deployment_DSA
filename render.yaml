@@ -9,7 +9,11 @@ services:
     startCommand: ./server
     envVars:
       - key: PORT
-        generateValue: false    # Render injects $PORT automatically; server.cpp reads it via getenv("PORT")
+        generateValue: false  
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html  # Render injects $PORT automatically; server.cpp reads it via getenv("PORT")
     # If materials.json is large, commit it to the repo or fetch it in a build step:
     # buildCommand: |
     #   wget -q "https://your-cdn.com/materials.json" -O materials.json
