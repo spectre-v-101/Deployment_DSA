@@ -148,7 +148,7 @@ string generate_explanation(const Result &r, float w_struct, float w_energy, flo
     // NOTE: density_sim and volume_sim via raw sim_diff are only
     // meaningful if values are pre-normalized. Flag when crystal_sim
     // dominates (which it almost always will given the unit issue).
-    exp += "[Structure]\n";
+    exp += "[Structure]\\n";
     if (r.S_struct > 0.85)
         exp += "  High structural similarity: same or closely related crystal "
                "system with compatible packing and unit cell dimensions. "
