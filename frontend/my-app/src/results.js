@@ -393,6 +393,7 @@ function Results() {
             )}
           </div>
         </div>
+        <a href="/" style={{ textDecoration: "none", color: t.accent, fontFamily: "monospace", fontSize: 13, letterSpacing: "0.1em" }}>← VECTA</a>
 
         <div style={{ display: "flex", gap: 8, alignItems: "center", flexShrink: 0 }}>
           {/* Research mode toggle */}

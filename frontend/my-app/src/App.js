@@ -404,8 +404,8 @@ const navigate = useNavigate();
 
 const handleSearch = (text = query) => {
   if (!text.trim()) return;
-  //navigate(`/results?q=${encodeURIComponent(text)}`);
-  window.open(`${window.location.origin}/results?q=${encodeURIComponent(text)}`, "_blank");
+  navigate(`/results?q=${encodeURIComponent(text)}`);
+  //window.open(`${window.location.origin}/results?q=${encodeURIComponent(text)}`, "_blank");
 };
   
 
