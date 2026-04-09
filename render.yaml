@@ -10,10 +10,18 @@ services:
     envVars:
       - key: PORT
         generateValue: false  
+   
+  - type: web
+    name: vecta-frontend
+    env: static
+    rootDir: frontend/my-app
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./build   # change to ./build if Create React App
     routes:
       - type: rewrite
         source: /*
-        destination: /index.html  # Render injects $PORT automatically; server.cpp reads it via getenv("PORT")
+        destination: /index.html
+ # Render injects $PORT automatically; server.cpp reads it via getenv("PORT")
     # If materials.json is large, commit it to the repo or fetch it in a build step:
     # buildCommand: |
     #   wget -q "https://your-cdn.com/materials.json" -O materials.json
