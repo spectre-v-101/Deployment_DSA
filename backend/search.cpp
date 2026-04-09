@@ -115,43 +115,58 @@ void initSearchEngine() {
 }
 
 // 🔥 Find Similar
-string generate_explanation(const Result &r) {
+string generate_explanation(const Result &r, float w_struct, float w_energy, float w_elec, float w_comp) {
     string exp = "";
 
     // Composition
     if (r.S_comp > 0.85)
-        exp += "-> Very similar composition; \\n";
+        exp += "-> Very similar elemental composition; likely comparable chemistry.\n";
     else if (r.S_comp > 0.6)
-        exp += "-> Moderate compositional similarity; \\n";
+        exp += "-> Moderate overlap in elements; partial chemical similarity.\n";
     else
-        exp += "-> Different composition; \\n";
+        exp += "-> Chemically different composition.\n";
 
     // Structure
     if (r.S_struct > 0.85)
-        exp += "-> structure closely matches; \\n";
+        exp += "-> Similar crystal symmetry and packing characteristics.\n";
     else if (r.S_struct > 0.6)
-        exp += "-> partially similar structure; \\n";
+        exp += "-> Some structural resemblance (symmetry or density overlap).\n";
     else
-        exp += "-> different crystal structure; \\n";
+        exp += "-> Different structural arrangement and symmetry.\n";
 
     // Energy
     if (r.S_energy > 0.85)
-        exp += "-> energetically very similar; \\n";
+        exp += "-> Comparable thermodynamic stability (formation/hull energy).\n";
     else if (r.S_energy > 0.6)
-        exp += "-> moderate energy similarity; \\n";
+        exp += "-> Moderately similar stability landscape.\n";
     else
-        exp += "-> energy differs significantly; \\n";
+        exp += "-> Different thermodynamic stability.\n";
 
     // Electronic
     if (r.S_elec > 0.85)
-        exp += "-> electronic properties align well \\n";
+        exp += "-> Similar band gap and metallic classification (energy scale of excitation).\n";
     else if (r.S_elec > 0.6)
-        exp += "-> some electronic similarity \\n";
+        exp += "-> Partial similarity in band gap or metallic behavior.\n";
     else
-        exp += "-> electronic behavior is different \\n";
+        exp += "-> Different band gap or metallic nature.\n";
+    float c_comp = w_comp * r.S_comp;
+float c_struct = w_struct * r.S_struct;
+float c_energy = w_energy * r.S_energy;
+float c_elec = w_elec * r.S_elec;
+exp += "-> Overall similarity influenced mainly by ";
+double max_c = max(max(c_comp, c_struct), max(c_energy, c_elec));
 
+if (max_c == c_comp)
+    exp += "composition similarity.\n";
+else if (max_c == c_struct)
+    exp += "structure symmetry similarity.\n";
+else if (max_c == c_energy)
+    exp += "thermodynamic similarity.\n";
+else
+    exp += "electronic (band gap) similarity.\n";
     return exp;
 }
+
 vector<Result> find_similar(string formula, int top_k , float struct_weight, float energy_weight, float elec_weight, float comp_weight) {
 
     if (!isLoaded) initSearchEngine();
@@ -212,7 +227,7 @@ vector<Result> find_similar(string formula, int top_k , float struct_weight, flo
         r.S_energy = energetic_similarity(query, materialDB_search[i]);
         r.S_elec   = electronic_similarity(query, materialDB_search[i]);
         r.S_comp   = compositional_similarity(query, materialDB_search[i]);
-        r.explanation=generate_explanation(r);
+        r.explanation=generate_explanation(r, struct_weight, energy_weight, elec_weight, comp_weight);
 
         r.S_total = (r.S_struct * struct_weight) + (r.S_energy * energy_weight) + (r.S_elec * elec_weight) + (r.S_comp * comp_weight);
 
