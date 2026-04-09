@@ -120,35 +120,35 @@ string generate_explanation(const Result &r, float w_struct, float w_energy, flo
 
     // Composition
     if (r.S_comp > 0.85)
-        exp += "-> Very similar elemental composition; likely comparable chemistry.\n";
+        exp += "-> Very similar elemental composition; likely comparable chemistry.\\n";
     else if (r.S_comp > 0.6)
-        exp += "-> Moderate overlap in elements; partial chemical similarity.\n";
+        exp += "-> Moderate overlap in elements; partial chemical similarity.\\n";
     else
-        exp += "-> Chemically different composition.\n";
+        exp += "-> Chemically different composition.\\n";
 
     // Structure
     if (r.S_struct > 0.85)
-        exp += "-> Similar crystal symmetry and packing characteristics.\n";
+        exp += "-> Similar crystal symmetry and packing characteristics.\\n";
     else if (r.S_struct > 0.6)
-        exp += "-> Some structural resemblance (symmetry or density overlap).\n";
+        exp += "-> Some structural resemblance (symmetry or density overlap).\\n";
     else
-        exp += "-> Different structural arrangement and symmetry.\n";
+        exp += "-> Different structural arrangement and symmetry.\\n";
 
     // Energy
     if (r.S_energy > 0.85)
-        exp += "-> Comparable thermodynamic stability (formation/hull energy).\n";
+        exp += "-> Comparable thermodynamic stability (formation/hull energy).\\n";
     else if (r.S_energy > 0.6)
-        exp += "-> Moderately similar stability landscape.\n";
+        exp += "-> Moderately similar stability landscape.\\n";
     else
-        exp += "-> Different thermodynamic stability.\n";
+        exp += "-> Different thermodynamic stability.\\n";
 
     // Electronic
     if (r.S_elec > 0.85)
-        exp += "-> Similar band gap and metallic classification (energy scale of excitation).\n";
+        exp += "-> Similar band gap and metallic classification (energy scale of excitation).\\n";
     else if (r.S_elec > 0.6)
-        exp += "-> Partial similarity in band gap or metallic behavior.\n";
+        exp += "-> Partial similarity in band gap or metallic behavior.\\n";
     else
-        exp += "-> Different band gap or metallic nature.\n";
+        exp += "-> Different band gap or metallic nature.\\n";
     float c_comp = w_comp * r.S_comp;
 float c_struct = w_struct * r.S_struct;
 float c_energy = w_energy * r.S_energy;
@@ -157,13 +157,13 @@ exp += "-> Overall similarity influenced mainly by ";
 double max_c = max(max(c_comp, c_struct), max(c_energy, c_elec));
 
 if (max_c == c_comp)
-    exp += "composition similarity.\n";
+    exp += "composition similarity.\\n";
 else if (max_c == c_struct)
-    exp += "structure symmetry similarity.\n";
+    exp += "structure symmetry similarity.\\n";
 else if (max_c == c_energy)
-    exp += "thermodynamic similarity.\n";
+    exp += "thermodynamic similarity.\\n";
 else
-    exp += "electronic (band gap) similarity.\n";
+    exp += "electronic (band gap) similarity.\\n";
     return exp;
 }
 
