@@ -189,7 +189,7 @@ function MainUI({
           {/* Input wrapper */}
           <div style={{ position:"relative" }}>
             {/* Ghost suggestion */}
-            {ghostSuggestion && (
+            {query!=="" && ghostSuggestion && (
               <div style={{
                 position:"absolute", top:0, left:0, right:0, bottom:0,
                 display:"flex", alignItems:"center",
@@ -198,8 +198,8 @@ function MainUI({
                 pointerEvents:"none", zIndex:1,
                 color: darkMode ? "rgba(255,255,255,0.15)" : "rgba(0,0,0,0.15)",
               }}>
-                <span style={{ visibility:"visible" }}>{query}</span>
-                <span>{ghostSuggestion}</span>
+                <span style={{ color:"transparent" }}>{query}</span>
+                <span style={{ color: darkMode ? "#b1bdca" : "#929ba3" }}>{ghostSuggestion}</span>
               </div>
             )}
 
