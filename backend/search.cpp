@@ -128,10 +128,8 @@ string generate_explanation(const Result &r, float w_struct, float w_energy, flo
     // ratio similarity AND element-set overlap simultaneously.
     // A high score requires BOTH conditions to be true.
     exp += "[Composition]\\n";
-    if (r.S_comp > 0.85)
-        exp += "  High compositional similarity: materials share the same "
-               "or nearly identical elements in similar proportions. "
-               "Strong candidate for isoelectronic or isovalent substitution.\\n";
+    if (r.S_comp > 0.9)
+        exp += "  Strong candidate for compositional equivalence; materials share nearly identical elemental makeup and stoichiometric ratios. Any deeper chemical relationship (e.g., substitution or electronic equivalence) requires additional validation.\\n";
     else if (r.S_comp > 0.6)
         exp += "  Moderate compositional similarity: partial element overlap "
                "with differing stoichiometry or one/two substituted elements. "
@@ -153,9 +151,9 @@ string generate_explanation(const Result &r, float w_struct, float w_energy, flo
     // dominates (which it almost always will given the unit issue).
     exp += "[Structure]\\n";
     if (r.S_struct > 0.85)
-        exp += "  High structural similarity: same or closely related crystal "
-               "system with compatible packing and unit cell dimensions. "
-               "Likely to exhibit similar mechanical and transport properties.\\n";
+        exp +=  " High structural similarity: structural descriptors are closely matched, indicating similar symmetry features and atomic packing motifs."
+               "Likely to exhibit similar mechanical and transport properties."
+                "Exact crystallographic equivalence should be verified separately.\\n";
     else if (r.S_struct > 0.6) {
         exp += "  Moderate structural similarity: compatible symmetry class "
                "(e.g. cubic-tetragonal or hexagonal-trigonal relationship) "
@@ -178,7 +176,7 @@ string generate_explanation(const Result &r, float w_struct, float w_energy, flo
     // energy_above_hull is the physically critical stability descriptor;
     // formation_energy alone conflates stability with bonding strength.
     exp += "[Thermodynamic Stability]\\n";
-    if (r.S_energy > 0.85)
+    if (r.S_energy > 0.9)
         exp += "  High energetic similarity: comparable distance from the "
                "convex hull and similar formation energy. Both materials "
                "likely occupy the same stability regime "
@@ -210,7 +208,7 @@ string generate_explanation(const Result &r, float w_struct, float w_energy, flo
                "insulating/semiconducting. Band gap comparison is not "
                "meaningful across this boundary. Electronic similarity "
                "score should be treated with caution.\\n";
-    } else if (r.S_elec > 0.85)
+    } else if (r.S_elec > 0.9)
         exp += "  High electronic similarity: closely matched band gap and "
                "same metallic classification. Likely comparable optical "
                "absorption edge, carrier effective mass regime, and "
@@ -289,7 +287,7 @@ string generate_explanation(const Result &r, float w_struct, float w_energy, flo
 
 // All three use the same σ — symmetric, no asymmetric inflation
 
-struct Hypothesis { string name, note; double conf; };
+/*struct Hypothesis { string name, note; double conf; };
 vector<Hypothesis> hyps;
 
 hyps.push_back({
@@ -393,7 +391,7 @@ for (auto &h : hyps) {
 
 if (!any_fired)
     exp += "[Relationship] Ambiguous — no hypothesis clears confidence "
-           "threshold. Manual inspection recommended.\\n";
+           "threshold. Manual inspection recommended.\\n";*/
 
     return exp;
 }
