@@ -113,7 +113,10 @@ void initSearchEngine() {
         isLoaded = true;
     }
 }
-
+// σ²=0.0625 → score drops to ~0.6 at 0.25 away from peak (reasonable boundary)
+auto hi  = [](double x) { return exp(-pow(x - 1.0, 2) / (2 * 0.0625)); };
+auto lo  = [](double x) { return exp(-pow(x - 0.0, 2) / (2 * 0.0625)); };
+auto mid = [](double x) { return exp(-pow(x - 0.5, 2) / (2 * 0.0625)); };
 // 🔥 Find Similar
 string generate_explanation(const Result &r, float w_struct, float w_energy, float w_elec, float w_comp) {
     string exp = "";
@@ -282,23 +285,115 @@ string generate_explanation(const Result &r, float w_struct, float w_energy, flo
     // ─────────────────────────────────────────────────────────────────
     // High structural + low compositional is physically suspicious
     // (different atoms, same crystal = possible but worth flagging).
-    if (r.S_struct > 0.75 && r.S_comp < 0.3)
-        exp += "[Note] Structural similarity is high despite very different "
-               "compositions. This may indicate isostructural compounds "
-               "(e.g. same prototype, different chemistry) — verify manually.\\n";
+  // Widths: consistent and physically motivated
 
-    // High compositional + low structural: polymorphs or amorphous phases
-    if (r.S_comp > 0.75 && r.S_struct < 0.3)
-        exp += "[Note] Compositional similarity is high but structure differs "
-               "substantially. Possible polymorphs or different phases of "
-               "the same composition — thermodynamic context is critical.\\n";
+// All three use the same σ — symmetric, no asymmetric inflation
 
-    // High energy similarity + very different composition/structure:
-    // coincidental stability, not related materials
-    if (r.S_energy > 0.75 && r.S_comp < 0.3 && r.S_struct < 0.3)
-        exp += "[Note] Similar thermodynamic stability despite different "
-               "composition and structure. Coincidental hull proximity — "
-               "not indicative of chemical or structural relationship.\\n";
+struct Hypothesis { string name, note; double conf; };
+vector<Hypothesis> hyps;
+
+hyps.push_back({
+    "Polymorphs",
+    "Same or near-identical composition with different crystal structure. "
+    "Likely polymorphs (e.g. TiO2 rutile/anatase, SiO2 quartz/cristobalite). "
+    "Check which phase is thermodynamically stable at target T/P.",
+    hi(r.S_comp) * lo(r.S_struct)
+    // No blending — polymorph signal is clearest when BOTH conditions are extreme
+});
+
+hyps.push_back({
+    "Isostructural",
+    "Same crystal prototype but different elemental chemistry "
+    "(e.g. NaCl/MgO rocksalt, perovskite family ABO3). "
+    "Properties may differ substantially despite structural match.",
+    hi(r.S_struct) * lo(r.S_comp)
+    // Restored to pure lo(S_comp) — penalizes correctly as comp rises
+});
+
+hyps.push_back({
+    "Solid Solution / Isovalent Substitution",
+    "High structural match with moderate compositional overlap. "
+    "Likely derived via substitution (e.g. Ga->In, Ba->Sr). "
+    "Properties vary continuously across alloy series.",
+    hi(r.S_struct) * mid(r.S_comp) * mid(r.S_elec)
+});
+
+hyps.push_back({
+    "Isoelectronic Analogues",
+    "Different composition but matching structure and electronic character. "
+    "Likely same valence electron count (e.g. GaAs/Ge/ZnSe).",
+    hi(r.S_struct) * hi(r.S_elec) * lo(r.S_comp)
+});
+
+hyps.push_back({
+    "Related Phases (same system)",
+    "Moderate compositional similarity with different structure. "
+    "Likely different stoichiometric phases (e.g. TiO/TiO2, Fe2O3/Fe3O4).",
+    mid(r.S_comp) * lo(r.S_struct)
+});
+
+hyps.push_back({
+    "Coincidental Hull Proximity",
+    "Similar thermodynamic stability but no structural/compositional relation. "
+    "Energy similarity is coincidental.",
+    hi(r.S_energy) * lo(r.S_comp) * lo(r.S_struct) * lo(r.S_elec)
+});
+
+double dup_conf =
+    hi(r.S_comp) * hi(r.S_struct) * hi(r.S_energy) * hi(r.S_elec);
+
+hyps.push_back({
+    "Near-identical / Duplicate Entry",
+    "All similarity dimensions are high. Likely same compound or duplicate entry.",
+    dup_conf
+});
+
+// ── Competition suppression (only the one that's physically justified) ──
+// Duplicate dominating → suppress all others (they're noise if it's the same material)
+if (dup_conf > 0.7)
+    for (auto &h : hyps)
+        if (h.name != "Near-identical / Duplicate Entry")
+            h.conf *= 0.2;
+
+// Solid solution is strictly more specific than isostructural when strong —
+// suppress isostructural only, and only moderately
+double solid_conf = 0.0;
+for (auto &h : hyps)
+    if (h.name == "Solid Solution / Isovalent Substitution")
+        solid_conf = h.conf;
+
+if (solid_conf > 0.6)
+    for (auto &h : hyps)
+        if (h.name == "Isostructural")
+            h.conf *= 0.6;
+
+// ── Ranking + output (unchanged) ──
+sort(hyps.begin(), hyps.end(),
+     [](const Hypothesis &a, const Hypothesis &b) {
+         return a.conf > b.conf;
+     });
+
+const double MIN_CONF = 0.25;
+bool any_fired = false;
+
+for (auto &h : hyps) {
+    if (h.conf < MIN_CONF) continue;
+    if (!any_fired) {
+        exp += "[Relationship Hypotheses]\\n";
+        any_fired = true;
+    }
+    string label = (h.conf > 0.70) ? "Strong"
+                 : (h.conf > 0.45) ? "Moderate"
+                 :                   "Weak";
+    exp += "  [" + label + " | "
+        +  to_string((int)round(h.conf * 100)) + "%] "
+        +  h.name + "\\n"
+        +  "  " + h.note + "\\n\\n";
+}
+
+if (!any_fired)
+    exp += "[Relationship] Ambiguous — no hypothesis clears confidence "
+           "threshold. Manual inspection recommended.\\n";
 
     return exp;
 }
