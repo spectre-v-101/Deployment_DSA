@@ -152,7 +152,7 @@ string generate_explanation(const Result &r, float w_struct, float w_energy, flo
     exp += "[Structure]\\n";
     if (r.S_struct > 0.85)
         exp +=  " High structural similarity: structural descriptors are closely matched, indicating similar symmetry features and atomic packing motifs."
-               "Likely to exhibit similar mechanical and transport properties."
+               "May exhibit similar mechanical and transport properties."
                 "Exact crystallographic equivalence should be verified separately.\\n";
     else if (r.S_struct > 0.6) {
         exp += "  Moderate structural similarity: compatible symmetry class "
