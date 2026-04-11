@@ -54,7 +54,7 @@ void push(char * word,int n){
     //bool already_exists = temp->end;
     temp->end=true;
     //if(!already_exists){
-    temp->frequency=1;
+    temp->frequency++;
     //}
     for(int i=0;i<depth;i++){ 
         if(path[i]->max_subtree_freq < temp->frequency){
