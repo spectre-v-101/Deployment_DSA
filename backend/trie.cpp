@@ -36,6 +36,7 @@ void push(char * word,int n){
         }
     struct Node* path[256]; 
     int depth=0;
+    path[depth++] = root;
     for(int i=0;i<n;i++){
         int index=(int)word[i];
         
@@ -50,12 +51,15 @@ void push(char * word,int n){
         }
         path[depth++]=temp;
     }
+    bool already_exists = temp->end;
     temp->end=true;
+    if(!already_exists){
     temp->frequency++;
     for(int i=0;i<depth;i++){ 
         if(path[i]->max_subtree_freq < temp->frequency){
              path[i]->max_subtree_freq = temp->frequency; 
-    } 
+    }
+} 
 }
 }
 void increment_frequency(const char* word, int n) {
