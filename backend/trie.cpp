@@ -55,13 +55,14 @@ void push(char * word,int n){
     temp->end=true;
     if(!already_exists){
     temp->frequency++;
+    }
     for(int i=0;i<depth;i++){ 
         if(path[i]->max_subtree_freq < temp->frequency){
              path[i]->max_subtree_freq = temp->frequency; 
     }
 } 
 }
-}
+
 void increment_frequency(const char* word, int n) {
     struct Node* temp = root;
 
