@@ -36,7 +36,7 @@ void push(char * word,int n){
         }
     struct Node* path[256]; 
     int depth=0;
-    path[depth++] = root;
+    //path[depth++] = root;
     for(int i=0;i<n;i++){
         int index=(int)word[i];
         
