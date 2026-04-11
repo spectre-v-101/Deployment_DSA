@@ -99,7 +99,7 @@ void DFS(struct Node * node , char * word , int depth,char * prefix){
     }
     int currentMin = (heap_size==K) ? heap_freq[0] : -1;
 
-    if(node->max_subtree_freq < currentMin){
+    if(node->max_subtree_freq <= currentMin){
     return;
     }
     
