@@ -7,6 +7,9 @@
 struct Node{
     Node* children[128];
     bool end;
+    int frequency;
+    int max_subtree_freq;
+    
 };
 
 extern Node* root;
