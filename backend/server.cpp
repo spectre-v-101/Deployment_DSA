@@ -1,7 +1,7 @@
-// ─────────────────────────────────────────────────────────────────────────────
+
 //  server.cpp  —  POSIX socket HTTP server (Linux / Render compatible)
-//  Replaces the WinSock2 version. All logic is unchanged.
-// ─────────────────────────────────────────────────────────────────────────────
+//  Replaces the WinSock2 version.
+
 
 #include <iostream>
 #include <sstream>
@@ -13,7 +13,7 @@
 #include <cctype>
 #include <algorithm>
 
-// ── POSIX networking (Linux / macOS) ─────────────────────────────────────────
+// ── POSIX networking (Linux / macOS) 
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -21,7 +21,7 @@
 #include <unistd.h>      // close()
 #include <sys/time.h>    // struct timeval  (replaces DWORD timeout)
 
-// ── Project headers ───────────────────────────────────────────────────────────
+// ── Project headers 
 #include "trie.h"
 #include "json.hpp"
 #include "search.h"
@@ -29,9 +29,9 @@
 using json = nlohmann::json;
 using namespace std;
 
-// ─────────────────────────────────────────────────────────────────────────────
+
 //  Helpers
-// ─────────────────────────────────────────────────────────────────────────────
+
 
 string urlDecode(const string& str) {
     string decoded;
@@ -55,9 +55,9 @@ string urlDecode(const string& str) {
     return decoded;
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
+
 //  Material DB  (local to server — for autocomplete details)
-// ─────────────────────────────────────────────────────────────────────────────
+
 
 unordered_map<string, string> materialMap;   // formula → material_id
 
@@ -71,9 +71,9 @@ struct Material {
 unordered_map<string, int>  formulaToID;
 unordered_map<int, Material> materialDB;
 
-// ─────────────────────────────────────────────────────────────────────────────
 
-string getMaterialDetails(const string& formula) {
+
+/*string getMaterialDetails(const string& formula) {
     if (!formulaToID.count(formula)) return "{}";
     int id = formulaToID.at(formula);
     const Material& m = materialDB.at(id);
@@ -84,7 +84,7 @@ string getMaterialDetails(const string& formula) {
     j += (m.band_gap >= 0) ? "\"band_gap\":" + to_string(m.band_gap)       : "\"band_gap\":null";
     j += "}";
     return j;
-}
+}*/
 
 void loadFromJSON(const string& filename) {
     ifstream file(filename);
@@ -117,9 +117,8 @@ void loadFromJSON(const string& filename) {
     cout << "Loaded " << count << " materials into Trie\n";
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
 //  Autocomplete helpers
-// ─────────────────────────────────────────────────────────────────────────────
+
 
 vector<string> tokenize(const string& query) {
     vector<string> tokens;
@@ -223,7 +222,7 @@ string buildRichSuggestions(const string& suggestions_json) {
     vector<string> formulas;
     string temp;
     for (char c : suggestions_json) {
-        if (isalnum(c)) { temp += c; }
+        if (c!='"') { temp += c; }
         else { if (!temp.empty()) { formulas.push_back(temp); temp.clear(); } }
     }
 
@@ -243,9 +242,9 @@ string buildRichSuggestions(const string& suggestions_json) {
     return output.dump();
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
+
 //  CORS preflight helper
-// ─────────────────────────────────────────────────────────────────────────────
+
 static void send_options(int client_fd) {
     const char* resp =
         "HTTP/1.1 204 No Content\r\n"
@@ -258,19 +257,19 @@ static void send_options(int client_fd) {
     send(client_fd, resp, strlen(resp), 0);
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
+
 //  main
-// ─────────────────────────────────────────────────────────────────────────────
+
 int main() {
     loadFromJSON("materials.json");
     initSearchEngine();
 
-    // ── Read PORT from environment (Render sets $PORT automatically) ──────────
+    // ── Read PORT from environment (Render sets $PORT automatically) 
     int port = 8080;
     const char* env_port = getenv("PORT");
     if (env_port) port = atoi(env_port);
 
-    // ── Create socket ─────────────────────────────────────────────────────────
+    // ── Create socket 
     int server_fd = socket(AF_INET, SOCK_STREAM, 0);
     if (server_fd < 0) { perror("socket"); return 1; }
 
@@ -292,7 +291,7 @@ int main() {
     cout << "Server running on port " << port << "\n";
     
 
-    // ── Accept loop ───────────────────────────────────────────────────────────
+    // ── Accept loop 
     while (true) {
         sockaddr_in client_addr{};
         socklen_t   addrlen = sizeof(client_addr);
@@ -310,14 +309,14 @@ int main() {
         string request(buf, bytes);
         cout << "Request: " << request.substr(0, 120) << "\n";
 
-        // ── CORS preflight ────────────────────────────────────────────────────
+        // ── CORS preflight
         if (request.rfind("OPTIONS", 0) == 0) {
             send_options(client);
             close(client);
             continue;
         }
 
-        // ── /suggest?q=... ────────────────────────────────────────────────────
+        // ── /suggest?q=...
         if (request.find("/suggest?q=") != string::npos) {
             size_t pos = request.find("/suggest?q=") + 11;
             bool isVoice = (request.find("voice=true") != string::npos);
@@ -343,7 +342,7 @@ int main() {
             continue;
         }
 
-        // ── /search?q=... ─────────────────────────────────────────────────────
+        // ── /search?q=... 
         if (request.find("/search?q=") != string::npos) {
             size_t pos = request.find("/search?q=") + 10;
 
@@ -403,7 +402,7 @@ int main() {
             continue;
         }
 
-        // ── 404 fallback ──────────────────────────────────────────────────────
+        // ── 404 fallback 
         const char* not_found =
             "HTTP/1.1 404 Not Found\r\n"
             "Access-Control-Allow-Origin: *\r\n"
