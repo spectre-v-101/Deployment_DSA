@@ -207,7 +207,7 @@ string getSuggestions(const string& query, bool isVoice = false) {
             const string& formula = p.first;
             bool match = true;
             for (auto& el : elements)
-                if (formula.rfind(el, 0) == string::npos) { match = false; break; }
+                if (formula.find(el, 0) == string::npos) { match = false; break; }
             if (match) suggestions.push_back(formula);
             if (suggestions.size() >= 7) break;
         }
