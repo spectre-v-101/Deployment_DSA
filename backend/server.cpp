@@ -203,7 +203,7 @@ string getSuggestions(const string& query, bool isVoice = false) {
         }
 
         vector<string> suggestions;
-        for (auto& p : materialMap) {
+        /*for (auto& p : materialMap) {
             const string& formula = p.first;
             bool match = true;
             for (auto& el : elements)
@@ -214,8 +214,72 @@ string getSuggestions(const string& query, bool isVoice = false) {
 
         nlohmann::json j = nlohmann::json::array();
         for (auto& s : suggestions) j.push_back(s);
+        return j.dump();*/
+        vector<pair<int,string>> scored;
+
+for (auto& p : materialMap) {
+    const string& formula = p.first;
+    int score = 0;
+    int match_count = 0;
+
+    // -------- match score --------
+    for (auto& el : elements) {
+        if (formula.find(el) != string::npos) {
+            score += 10;
+            match_count++;
+        }
+    }
+
+    // -------- FULL MATCH BONUS 🔥 --------
+    if (match_count == elements.size()) {
+        score += 30;  // strong boost
+    }
+
+    // -------- PENALIZE EXTRA ELEMENTS 🔥 --------
+    int extra_penalty = 0;
+
+    for (int i = 0; i < formula.size(); i++) {
+        if (isupper(formula[i])) {
+            string symbol;
+            symbol += formula[i];
+
+            if (i + 1 < formula.size() && islower(formula[i+1])) {
+                symbol += formula[i+1];
+            }
+
+            // if this element is NOT in query → penalize
+            bool found = false;
+            for (auto& el : elements) {
+                if (symbol == el || symbol.find(el) != string::npos) {
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found) extra_penalty += 5;
+        }
+    }
+
+    score -= extra_penalty;
+
+    // -------- push if relevant --------
+    if (score > 0)
+        scored.push_back({score, formula});
+}
+
+// -------- sort --------
+sort(scored.rbegin(), scored.rend());
+
+// -------- top 7 --------
+for (auto& s : scored) {
+    suggestions.push_back(s.second);
+    if (suggestions.size() >= 7) break;
+}
+ nlohmann::json j = nlohmann::json::array();
+        for (auto& s : suggestions) j.push_back(s);
         return j.dump();
     }
+
 }
 
 string buildRichSuggestions(const string& suggestions_json) {
