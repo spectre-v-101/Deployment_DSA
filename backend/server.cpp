@@ -185,7 +185,7 @@ string getSuggestions(const string& query, bool isVoice = false) {
             {"iron","Fe"},{"oxygen","O"},{"aluminum","Al"},{"silicon","Si"},
             {"copper","Cu"},{"carbon","C"},{"calcium","Ca"},{"sodium","Na"},
             {"magnesium","Mg"},{"potassium","K"},{"nitrogen","N"},{"sulfur","S"},
-            {"phosphorus","P"},{"chlorine","Cl"},{"fluorine","F"},{"zinc","Zn"},{"cadmium","Cd"},{"germanium","Ge"}
+            {"phosphorus","P"},{"chlorine","Cl"},{"fluorine","F"},{"zinc","Zn"},{"cadmium","Cd"},{"germanium","Ge"},
             {"lead","Pb"},{"mercury","Hg"},{"silver","Ag"},{"gold","Au"},{"aluminium","Al"},{"hydrogen","H"}
         };
         unordered_map<string,string> compoundMap = {
