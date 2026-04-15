@@ -192,7 +192,7 @@ string getSuggestions(const string& query, bool isVoice = false) {
             {"oxide","O"},{"nitride","N"},{"carbide","C"},{"sulfide","S"},
             {"phosphide","P"},{"chloride","Cl"},{"fluoride","F"},{"hydroxide","OH"},
             {"carbonate","CO3"},{"sulfate","SO4"},{"nitrate","NO3"},{"phosphate","PO4"},
-            {"sulphide","S"},{"sulphate","SO4"}
+            {"sulphide","S"}, {"sulphate","SO4"}
         };
 
         vector<string> tokens   = tokenize(query);
