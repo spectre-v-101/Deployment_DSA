@@ -8,7 +8,7 @@
 using namespace std;
 using json = nlohmann::json;
 
-#define MAX 30000
+#define MAX 150000
 
 Material1 materialDB_search[MAX];
 unordered_map<string, int> formulaToID_search;
